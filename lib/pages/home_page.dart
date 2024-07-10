@@ -138,10 +138,7 @@ class HomePage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: MyListTile(
-                            title: book.title,
-                            author: book.author,
-                            rating: book.rating
-                                .toDouble(), // Cast int rating to double
+                            book: book,
                             onEditPressed: (context) {
                               Navigator.of(context).push(
                                 MaterialPageRoute(

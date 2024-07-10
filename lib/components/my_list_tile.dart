@@ -1,21 +1,19 @@
 import 'package:book_lab/theme/theme_provider.dart';
+import 'package:book_lab/models/book.dart';
+import 'package:book_lab/pages/book_detail_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:provider/provider.dart';
 
 class MyListTile extends StatelessWidget {
-  final String title;
-  final String author;
-  final double rating;
+  final Book book;
   final void Function(BuildContext)? onEditPressed;
   final void Function(BuildContext)? onDeletePressed;
 
   const MyListTile({
     super.key,
-    required this.title,
-    required this.author,
-    required this.rating,
+    required this.book,
     required this.onEditPressed,
     required this.onDeletePressed,
   });
@@ -48,21 +46,32 @@ class MyListTile extends StatelessWidget {
         ],
       ),
       child: ListTile(
-        title: Text(
-          title,
-          style: TextStyle(color: isDarkMode ? Colors.white : Colors.white),
+        title: GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => BookDetailPage(book: book),
+              ),
+            );
+          },
+          child: Text(
+            book.title,
+            style: TextStyle(
+                color: isDarkMode ? Colors.white : Colors.white,
+                fontWeight: FontWeight.bold),
+          ),
         ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              author,
+              book.author,
               style:
                   TextStyle(color: isDarkMode ? Colors.white70 : Colors.white),
             ),
             SizedBox(height: 4),
             RatingBarIndicator(
-              rating: rating,
+              rating: book.rating.toDouble(),
               itemBuilder: (context, index) => Icon(
                 Icons.star,
                 color: Colors.amber,
@@ -81,10 +90,4 @@ class MyListTile extends StatelessWidget {
       ),
     );
   }
-}
-
-class Colours {
-  static const aquamarine = Color(0xFF7FFFD4);
-  static const midnightBlue = Color(0xFF0D0D21);
-  static const ggreen = Color(0xFF3247E5);
 }
