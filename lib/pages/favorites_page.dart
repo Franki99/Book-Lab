@@ -1,15 +1,15 @@
-// settings_page.dart
+// favorites_page.dart
 import 'package:flutter/material.dart';
 
-class SettingsPage extends StatelessWidget {
+class FavoritesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Settings'),
+        title: Text('Favorites'),
       ),
       body: Center(
-        child: Text('Settings Page'),
+        child: Text('Favorites Page'),
       ),
     );
   }
