@@ -15,7 +15,7 @@ class FavoritesPage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Favorites'),
+        title: Text('My Favorites'),
       ),
       body: favoriteBooks.isEmpty
           ? Center(
