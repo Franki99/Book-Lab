@@ -19,10 +19,16 @@ class DBHelper {
       path,
       onCreate: (db, version) {
         return db.execute(
-          'CREATE TABLE books(id INTEGER PRIMARY KEY, title TEXT, author TEXT, rating INTEGER, read INTEGER)',
+          'CREATE TABLE books(id INTEGER PRIMARY KEY, title TEXT, author TEXT, rating INTEGER, read INTEGER, isFavorite INTEGER)',
         );
       },
-      version: 1,
+      onUpgrade: (db, oldVersion, newVersion) async {
+        if (oldVersion < 2) {
+          await db.execute(
+              'ALTER TABLE books ADD COLUMN isFavorite INTEGER DEFAULT 0');
+        }
+      },
+      version: 2,
     );
   }
 
@@ -30,41 +36,24 @@ class DBHelper {
     final db = await database;
     final maps = await db.query('books');
     return List.generate(maps.length, (i) {
-      return Book(
-        id: maps[i]['id'] as int?,
-        title: maps[i]['title'] as String,
-        author: maps[i]['author'] as String,
-        rating: maps[i]['rating'] as int,
-        read: (maps[i]['read'] as int) == 1,
-      );
+      return Book.fromMap(maps[i]);
     });
   }
 
-  //Create a book
   Future<void> insertBook(Book book) async {
     final db = await database;
     await db.insert('books', book.toMap(),
         conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  //update a book details
   Future<void> updateBook(Book book) async {
     final db = await database;
-    await db.update(
-      'books',
-      book.toMap(),
-      where: 'id = ?',
-      whereArgs: [book.id],
-    );
+    await db
+        .update('books', book.toMap(), where: 'id = ?', whereArgs: [book.id]);
   }
 
-  // Delete a book from the db
   Future<void> deleteBook(int id) async {
     final db = await database;
-    await db.delete(
-      'books',
-      where: 'id = ?',
-      whereArgs: [id],
-    );
+    await db.delete('books', where: 'id = ?', whereArgs: [id]);
   }
 }

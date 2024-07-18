@@ -5,17 +5,21 @@ import 'package:book_lab/models/book.dart';
 class BookProvider extends ChangeNotifier {
   final DBHelper dbHelper = DBHelper();
   List<Book> _books = [];
+  List<Book> _filteredBooks = [];
 
   List<Book> get books => _books;
+  List<Book> get filteredBooks => _filteredBooks;
+  List<Book> get favoriteBooks =>
+      _books.where((book) => book.isFavorite).toList();
 
   Future<List<Book>> fetchBooks() async {
     try {
       _books = await dbHelper.fetchBooks();
+      _filteredBooks = _books;
       return _books;
     } catch (e) {
       print('Error fetching books: $e');
-      // Handle error as needed
-      return []; // Return empty list or throw an error based on your logic
+      return [];
     }
   }
 
@@ -26,47 +30,60 @@ class BookProvider extends ChangeNotifier {
   Future<void> addBook(Book book) async {
     try {
       await dbHelper.insertBook(book);
-      await fetchBooks(); // Refresh the list after adding a book
+      await fetchBooks();
       notifyListeners();
     } catch (e) {
       print('Error adding book: $e');
-      // Handle error as needed
     }
   }
 
   Future<void> updateBook(Book book) async {
     try {
       await dbHelper.updateBook(book);
-      await fetchBooks(); // Refresh the list after updating a book
-      notifyListeners();
+      int index = _books.indexWhere((b) => b.id == book.id);
+      if (index != -1) {
+        _books[index] = book;
+        _filteredBooks = _books;
+        notifyListeners();
+      }
     } catch (e) {
       print('Error updating book: $e');
-      // Handle error as needed
     }
   }
 
   Future<void> deleteBook(int id) async {
     try {
       await dbHelper.deleteBook(id);
-      await fetchBooks(); // Refresh the list after deleting a book
+      _books.removeWhere((book) => book.id == id);
+      _filteredBooks = _books;
       notifyListeners();
     } catch (e) {
       print('Error deleting book: $e');
-      // Handle error as needed
     }
+  }
+
+  Future<void> toggleFavoriteStatus(Book book) async {
+    book = Book(
+      id: book.id,
+      title: book.title,
+      author: book.author,
+      rating: book.rating,
+      read: book.read,
+      isFavorite: !book.isFavorite,
+    );
+    await updateBook(book);
   }
 
   void searchBooks(String query) {
     if (query.isEmpty) {
-      // Reset to original list if query is empty
-      fetchBooks();
+      _filteredBooks = _books;
     } else {
-      _books = _books.where((book) {
-        // Customize this condition based on your search requirements
-        return book.title.toLowerCase().contains(query.toLowerCase()) ||
-            book.author.toLowerCase().contains(query.toLowerCase());
-      }).toList();
-      notifyListeners();
+      _filteredBooks = _books
+          .where((book) =>
+              book.title.toLowerCase().contains(query.toLowerCase()) ||
+              book.author.toLowerCase().contains(query.toLowerCase()))
+          .toList();
     }
+    notifyListeners();
   }
 }

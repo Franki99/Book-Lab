@@ -1,3 +1,4 @@
+import 'package:book_lab/providers/book_provider.dart';
 import 'package:book_lab/theme/theme_provider.dart';
 import 'package:book_lab/models/book.dart';
 import 'package:book_lab/pages/book_detail_page.dart';
@@ -22,6 +23,7 @@ class MyListTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final isDarkMode = themeProvider.themeData.brightness == Brightness.dark;
+    final bookProvider = Provider.of<BookProvider>(context, listen: false);
 
     return Slidable(
       endActionPane: ActionPane(
@@ -83,9 +85,25 @@ class MyListTile extends StatelessWidget {
             ),
           ],
         ),
-        trailing: Icon(
-          Icons.arrow_forward_ios_outlined,
-          color: isDarkMode ? Colors.white : Colors.blue,
+        trailing: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            IconButton(
+              icon: Icon(
+                book.isFavorite ? Icons.favorite : Icons.favorite_border,
+                color: book.isFavorite
+                    ? Colors.red
+                    : (isDarkMode ? Colors.white54 : Colors.white),
+              ),
+              onPressed: () {
+                bookProvider.toggleFavoriteStatus(book);
+              },
+            ),
+            Icon(
+              Icons.arrow_forward_ios_outlined,
+              color: isDarkMode ? Colors.white : Colors.blue,
+            ),
+          ],
         ),
       ),
     );
