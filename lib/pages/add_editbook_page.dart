@@ -62,87 +62,54 @@ class _AddEditBookPageState extends State<AddEditBookPage> {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final isDarkMode = themeProvider.themeData.brightness == Brightness.dark;
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.book == null ? 'Add Book' : 'Edit Book'),
+    return Padding(
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+        left: 16,
+        right: 16,
+        top: 16,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Center(
-            child: Container(
-              width: 400,
-              padding: const EdgeInsets.all(16.0),
-              margin: const EdgeInsets.only(top: 50.0), // Move the box lower
-              decoration: BoxDecoration(
-                color: isDarkMode
-                    ? Colours.midnightBlue
-                    : Colors.black, // Set background color
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black12,
-                    blurRadius: 8,
-                  ),
-                ],
-              ),
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            widget.book == null ? 'Add Book' : 'Edit Book',
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: isDarkMode ? Colours.aquamarine : Colours.midnightBlue,
+            ),
+          ),
+          SizedBox(height: 16),
+          Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _titleController,
+                  decoration: InputDecoration(labelText: 'Title'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter a title';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 8),
+                TextFormField(
+                  controller: _authorController,
+                  decoration: InputDecoration(labelText: 'Author'),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter an author';
+                    }
+                    return null;
+                  },
+                ),
+                SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    TextFormField(
-                      controller: _titleController,
-                      style: TextStyle(
-                          color:
-                              isDarkMode ? Colors.grey[100] : Colors.grey[100]),
-                      decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color:
-                                    isDarkMode ? Colors.white : Colors.white),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey.shade600),
-                          ),
-                          labelText: 'Title',
-                          labelStyle: TextStyle(
-                            color: isDarkMode ? Colors.white : Colors.white,
-                          )),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a title';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 16),
-                    TextFormField(
-                      controller: _authorController,
-                      style: TextStyle(
-                          color:
-                              isDarkMode ? Colors.grey[100] : Colors.grey[100]),
-                      decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(
-                                color:
-                                    isDarkMode ? Colors.white : Colors.white),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey.shade600),
-                          ),
-                          labelText: 'Author',
-                          labelStyle: TextStyle(
-                            color: isDarkMode ? Colors.white : Colors.white,
-                          )),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter an author';
-                        }
-                        return null;
-                      },
-                    ),
-                    SizedBox(height: 16),
                     Text(
                       'Rating:',
                       style: TextStyle(
@@ -151,70 +118,73 @@ class _AddEditBookPageState extends State<AddEditBookPage> {
                     ),
                     RatingBar.builder(
                       initialRating: _rating.toDouble(),
-                      minRating: 0,
+                      minRating: 1,
                       direction: Axis.horizontal,
-                      allowHalfRating: true,
+                      allowHalfRating: false,
                       itemCount: 5,
-                      itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
                       itemBuilder: (context, _) => Icon(
                         Icons.star,
                         color: Colors.amber,
                       ),
-                      unratedColor:
-                          isDarkMode ? Colors.white54 : Colors.grey[200],
                       onRatingUpdate: (rating) {
                         setState(() {
                           _rating = rating.toInt();
                         });
                       },
                     ),
-                    SizedBox(height: 13),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Read:',
-                          style: TextStyle(
-                              color: isDarkMode ? Colors.white : Colors.white,
-                              fontSize: 18),
-                        ),
-                        Switch(
-                          value: _isRead,
-                          onChanged: (value) {
-                            setState(() {
-                              _isRead = value;
-                            });
-                          },
-                        ),
-                      ],
-                    ),
-                    SizedBox(height: 32),
-                    Center(
-                      child: SizedBox(
-                        width: 150, // Adjust the width as needed
-                        child: ElevatedButton(
-                          onPressed: _saveForm,
-                          style: ElevatedButton.styleFrom(
-                            primary: isDarkMode
-                                ? Colours.ggreen
-                                : Colors.red, // Set the button color to red
-                          ),
-                          child: Text(
-                            'Save',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16),
-                          ),
-                        ),
+                  ],
+                ),
+                SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Mark as Read',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: isDarkMode
+                            ? Colours.aquamarine
+                            : Colours.midnightBlue,
                       ),
+                    ),
+                    Switch(
+                      value: _isRead,
+                      onChanged: (value) {
+                        setState(() {
+                          _isRead = value;
+                        });
+                      },
                     ),
                   ],
                 ),
-              ),
+                SizedBox(
+                  height: 16,
+                ),
+                Center(
+                  child: SizedBox(
+                    width: 150,
+                    child: ElevatedButton(
+                      onPressed: _saveForm,
+                      style: ElevatedButton.styleFrom(
+                        primary: isDarkMode
+                            ? Colours.ggreen
+                            : Colors.red, // Set the button color to red
+                      ),
+                      child: Text(
+                        'Save',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }

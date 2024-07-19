@@ -1,11 +1,11 @@
-import 'package:book_lab/components/my_list_tile.dart';
-import 'package:book_lab/pages/add_editbook_page.dart';
-import 'package:book_lab/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:book_lab/models/book.dart';
 import 'package:book_lab/providers/book_provider.dart';
 import 'package:book_lab/providers/preference_provider.dart';
+import 'package:book_lab/pages/add_editbook_page.dart';
+import 'package:book_lab/theme/theme_provider.dart';
+import 'package:book_lab/components/my_list_tile.dart';
 
 class HomePage extends StatelessWidget {
   @override
@@ -17,7 +17,12 @@ class HomePage extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Book Lab'),
+        title: Text(
+          _greeting(),
+          style: TextStyle(
+            color: isDarkMode ? Colors.white70 : Colours.midnightBlue,
+          ),
+        ),
         actions: [
           PopupMenuButton<String>(
             onSelected: (value) {
@@ -44,12 +49,12 @@ class HomePage extends StatelessWidget {
               ),
             ],
           ),
-          IconButton(
-            icon: Icon(isDarkMode ? Icons.dark_mode : Icons.light_mode),
-            onPressed: () {
-              themeProvider.toggleTheme();
-            },
-          ),
+          // IconButton(
+          //   icon: Icon(isDarkMode ? Icons.dark_mode : Icons.light_mode),
+          //   onPressed: () {
+          //     themeProvider.toggleTheme();
+          //   },
+          // ),
         ],
       ),
       body: Consumer<PreferencesProvider>(
@@ -140,11 +145,54 @@ class HomePage extends StatelessWidget {
                           child: MyListTile(
                             book: book,
                             onEditPressed: (context) {
-                              Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      AddEditBookPage(book: book),
-                                ),
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                backgroundColor:
+                                    isDarkMode ? Colors.black : Colors.white,
+                                builder: (BuildContext context) {
+                                  return ClipRRect(
+                                    borderRadius: BorderRadius.vertical(
+                                      top: Radius.circular(20),
+                                    ),
+                                    child: DraggableScrollableSheet(
+                                      expand: false,
+                                      builder: (BuildContext context,
+                                          ScrollController scrollController) {
+                                        return SingleChildScrollView(
+                                          controller: scrollController,
+                                          child: Padding(
+                                            padding: EdgeInsets.only(
+                                              bottom: MediaQuery.of(context)
+                                                  .viewInsets
+                                                  .bottom,
+                                            ),
+                                            child: Container(
+                                              margin: EdgeInsets.all(16),
+                                              padding: EdgeInsets.all(16),
+                                              decoration: BoxDecoration(
+                                                color: isDarkMode
+                                                    ? Colors.grey.shade900
+                                                    : Colors.white,
+                                                borderRadius:
+                                                    BorderRadius.circular(12),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black26,
+                                                    blurRadius: 10,
+                                                    offset: Offset(0, 5),
+                                                  ),
+                                                ],
+                                              ),
+                                              child:
+                                                  AddEditBookPage(book: book),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
                               );
                             },
                             onDeletePressed: (context) async {
@@ -175,10 +223,49 @@ class HomePage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: isDarkMode ? Colours.ggreen : Colors.red,
         onPressed: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => AddEditBookPage(),
-            ),
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+            builder: (BuildContext context) {
+              return ClipRRect(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(20),
+                ),
+                child: DraggableScrollableSheet(
+                  expand: false,
+                  builder: (BuildContext context,
+                      ScrollController scrollController) {
+                    return SingleChildScrollView(
+                      controller: scrollController,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          bottom: MediaQuery.of(context).viewInsets.bottom,
+                        ),
+                        child: Container(
+                          margin: EdgeInsets.all(16),
+                          padding: EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: isDarkMode
+                                ? Colors.grey.shade900
+                                : Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black26,
+                                blurRadius: 10,
+                                offset: Offset(0, 5),
+                              ),
+                            ],
+                          ),
+                          child: AddEditBookPage(),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              );
+            },
           );
         },
         child: Icon(
