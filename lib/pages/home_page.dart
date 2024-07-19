@@ -184,8 +184,20 @@ class HomePage extends StatelessWidget {
                                                   ),
                                                 ],
                                               ),
-                                              child:
+                                              child: Stack(
+                                                children: [
+                                                  Positioned(
+                                                    right: 0,
+                                                    child: IconButton(
+                                                      icon: Icon(Icons.clear),
+                                                      onPressed: () {
+                                                        Navigator.pop(context);
+                                                      },
+                                                    ),
+                                                  ),
                                                   AddEditBookPage(book: book),
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         );
@@ -258,7 +270,20 @@ class HomePage extends StatelessWidget {
                               ),
                             ],
                           ),
-                          child: AddEditBookPage(),
+                          child: Stack(
+                            children: [
+                              Positioned(
+                                right: 0,
+                                child: IconButton(
+                                  icon: Icon(Icons.clear),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                              ),
+                              AddEditBookPage(),
+                            ],
+                          ),
                         ),
                       ),
                     );

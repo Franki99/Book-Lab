@@ -93,7 +93,20 @@ class BookDetailPage extends StatelessWidget {
                                             ),
                                           ],
                                         ),
-                                        child: AddEditBookPage(book: book),
+                                        child: Stack(
+                                          children: [
+                                            Positioned(
+                                              right: 0,
+                                              child: IconButton(
+                                                icon: Icon(Icons.clear),
+                                                onPressed: () {
+                                                  Navigator.pop(context);
+                                                },
+                                              ),
+                                            ),
+                                            AddEditBookPage(book: book),
+                                          ],
+                                        ),
                                       ),
                                     ),
                                   );
