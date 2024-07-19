@@ -1,11 +1,10 @@
 import 'package:book_lab/models/book.dart';
 import 'package:book_lab/pages/add_editbook_page.dart';
 import 'package:book_lab/providers/book_provider.dart';
-import 'package:book_lab/providers/preference_provider.dart';
 import 'package:book_lab/theme/theme_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
+import 'package:provider/provider.dart';
 
 class BookDetailPage extends StatelessWidget {
   final Book book;
@@ -15,7 +14,7 @@ class BookDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final bookProvider = Provider.of<BookProvider>(context);
-    final preferencesProvider = Provider.of<PreferencesProvider>(context);
+    // final preferencesProvider = Provider.of<PreferencesProvider>(context);
     final themeProvider = Provider.of<ThemeProvider>(context);
     final isDarkMode = themeProvider.themeData.brightness == Brightness.dark;
 
