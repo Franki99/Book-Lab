@@ -288,6 +288,7 @@ class HomePage extends StatelessWidget {
   }
 }
 
+//Colors Used
 class Colours {
   static const aquamarine = Color(0xFF7FFFD4);
   static const midnightBlue = Color(0xFF0D0D21);
