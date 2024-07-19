@@ -42,10 +42,52 @@ class FavoritesPage extends StatelessWidget {
                   child: MyListTile(
                     book: book,
                     onEditPressed: (context) {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => AddEditBookPage(book: book),
-                        ),
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        backgroundColor:
+                            isDarkMode ? Colors.black : Colors.white,
+                        builder: (BuildContext context) {
+                          return ClipRRect(
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20),
+                            ),
+                            child: DraggableScrollableSheet(
+                              expand: false,
+                              builder: (BuildContext context,
+                                  ScrollController scrollController) {
+                                return SingleChildScrollView(
+                                  controller: scrollController,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                      bottom: MediaQuery.of(context)
+                                          .viewInsets
+                                          .bottom,
+                                    ),
+                                    child: Container(
+                                      margin: EdgeInsets.all(16),
+                                      padding: EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        color: isDarkMode
+                                            ? Colors.grey.shade900
+                                            : Colors.white,
+                                        borderRadius: BorderRadius.circular(12),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.black26,
+                                            blurRadius: 10,
+                                            offset: Offset(0, 5),
+                                          ),
+                                        ],
+                                      ),
+                                      child: AddEditBookPage(book: book),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          );
+                        },
                       );
                     },
                     onDeletePressed: (context) {
