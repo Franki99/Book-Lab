@@ -117,8 +117,6 @@ class SettingsPage extends StatelessWidget {
 class FontSelectionDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final themeProvider = Provider.of<ThemeProvider>(context, listen: false);
-
     return AlertDialog(
       title: Text('Select Font Style'),
       content: Column(
